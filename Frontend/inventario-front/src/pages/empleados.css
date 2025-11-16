@@ -1,0 +1,147 @@
+.empleados-container {
+  width: 100%;
+}
+
+.titulo {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #0a8a6a;
+}
+
+/* Acciones superiores */
+.acciones-superiores {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.btn-agregar {
+  background: #0a8a6a;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-agregar:hover {
+  background: #097559;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Tabla */
+.tabla-empleados {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-empleados thead {
+  background: #0a8a6a;
+  color: white;
+  font-weight: 600;
+}
+
+.tabla-empleados th {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 2px solid #0a8a6a;
+}
+
+.tabla-empleados td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-empleados tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.tabla-empleados tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Estado badge */
+.estado {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.estado.activo {
+  background: #c8e6c9;
+  color: #2e7d32;
+}
+
+.estado.inactivo {
+  background: #ffcccc;
+  color: #c62828;
+}
+
+/* Acciones */
+.acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-editar,
+.btn-borrar {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.btn-editar {
+  background: #ffd966;
+  color: black;
+}
+
+.btn-editar:hover {
+  background: #ffcd38;
+  transform: scale(1.1);
+}
+
+.btn-borrar {
+  background: #ff6b6b;
+  color: white;
+}
+
+.btn-borrar:hover {
+  background: #ff4d4d;
+  transform: scale(1.1);
+}
+
+/* Mensajes */
+.cargando,
+.sin-datos {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #666;
+  background: white;
+  border-radius: 8px;
+}
+
+.error {
+  background: #ffe6e6;
+  color: #d32f2f;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #d32f2f;
+  font-weight: 500;
+}
