@@ -1,0 +1,83 @@
+/* Fondo tipo gradiente */
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(to right, #7ed957, #00a3c8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Título grande arriba */
+.titulo-principal {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Caja blanca */
+.login-box {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 15px;
+  border: 4px solid #0fa958;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.login-box h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Campos */
+.campo {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.campo label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.icono {
+  margin-right: 5px;
+}
+
+/* Inputs */
+.campo input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: none;
+  border-bottom: 2px solid black;
+  outline: none;
+  font-size: 16px;
+}
+
+/* Botón */
+.btn-ingresar {
+  margin-top: 10px;
+  background: #31b33a;
+  border: none;
+  padding: 10px 25px;
+  color: white;
+  font-size: 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-ingresar:hover {
+  background: #27962f;
+}
+
+/* Error */
+.error {
+  color: red;
+  font-weight: bold;
+}
