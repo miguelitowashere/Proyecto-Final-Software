@@ -65,7 +65,12 @@ export default function AgregarEmpleadoModal({ isOpen, onClose, onEmpleadoAgrega
       onClose();
     } catch (err) {
       console.error("❌ Error agregando empleado:", err.response?.data);
-      setError(err.response?.data?.detail || "Error agregando empleado");
+      console.error("Error completo:", err.response);
+      const errorMsg = err.response?.data?.error || 
+                       err.response?.data?.detail || 
+                       JSON.stringify(err.response?.data) ||
+                       "Error agregando empleado";
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -93,7 +98,7 @@ export default function AgregarEmpleadoModal({ isOpen, onClose, onEmpleadoAgrega
               name="user_username"
               value={formData.user.username}
               onChange={handleChange}
-              placeholder="Nombre de usuario"
+              placeholder="Nombre de usuario para login"
               required
             />
           </div>
@@ -135,21 +140,8 @@ export default function AgregarEmpleadoModal({ isOpen, onClose, onEmpleadoAgrega
               name="user_password"
               value={formData.user.password}
               onChange={handleChange}
-              placeholder="Contraseña"
+              placeholder="Contraseña para login"
               required
-            />
-          </div>
-
-          {/* Teléfono */}
-          <div className="form-group">
-            <label htmlFor="telefono">Teléfono</label>
-            <input
-              type="tel"
-              id="telefono"
-              name="telefono"
-              value={formData.telefono}
-              onChange={handleChange}
-              placeholder="Ej: 3005551234"
             />
           </div>
 

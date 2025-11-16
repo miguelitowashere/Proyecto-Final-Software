@@ -145,3 +145,14 @@
   border-left: 4px solid #d32f2f;
   font-weight: 500;
 }
+
+/* Rol badge */
+.rol-badge {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #e3f2fd;
+  color: #1976d2;
+  display: inline-block;
+}
