@@ -1,4 +1,5 @@
 from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .views import (
     CategoriaViewSet, ColeccionViewSet, ProductoViewSet,
     ClienteViewSet, EmpleadoViewSet,
@@ -15,3 +16,12 @@ router.register(r'ventas', VentaViewSet)
 router.register(r'movimientos-inventario', MovimientoInventarioViewSet)
 
 urlpatterns = router.urls
+
+from .views import google_login
+
+urlpatterns = [
+    path("google-login/", google_login),    
+]
+
+urlpatterns += router.urls
+
