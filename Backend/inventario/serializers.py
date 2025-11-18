@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from decimal import Decimal
+from django.db import transaction
 from .models import (
     Categoria, Coleccion, Producto,
     Venta, DetalleVenta, MovimientoInventario,
@@ -123,14 +125,27 @@ class CrearVentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Venta
         fields = [
+            'id', 'fecha',
             'canal_venta', 'empleado',
             'subtotal', 'descuento', 'total',
             'notas', 'detalles'
         ]
+        read_only_fields = ('id', 'fecha')
 
     def create(self, validated_data):
         detalles_data = validated_data.pop('detalles')
-        venta = Venta.objects.create(**validated_data)
-        for detalle_data in detalles_data:
-            DetalleVenta.objects.create(venta=venta, **detalle_data)
+        with transaction.atomic():
+            venta = Venta.objects.create(**validated_data)
+            subtotal = Decimal('0')
+            for detalle_data in detalles_data:
+                cantidad = Decimal(detalle_data['cantidad'])
+                precio_unitario = Decimal(str(detalle_data['precio_unitario']))
+                subtotal += cantidad * precio_unitario
+                DetalleVenta.objects.create(venta=venta, **detalle_data)
+
+            venta.subtotal = subtotal
+            venta.descuento = validated_data.get('descuento', Decimal('0')) or Decimal('0')
+            venta.total = subtotal - venta.descuento
+            venta.save()
+
         return venta

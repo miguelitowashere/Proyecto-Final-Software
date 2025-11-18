@@ -1,14 +1,16 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+﻿import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 
 // Páginas
-import LoginPage from './pages/LoginPage';
+import LoginPage from "./pages/LoginPage";
 import MenuLateral from "./layouts/MenuLateral";
 import ClientesPage from "./pages/ClientesPage";
-import EmpleadosPage from './pages/EmpleadosPage';
-import ProductosPage from './pages/ProductosPage';
-import CategoriasPage from './pages/CategoriasPage';
-import ColeccionesPage from './pages/ColeccionesPage';
+import EmpleadosPage from "./pages/EmpleadosPage";
+import ProductosPage from "./pages/ProductosPage";
+import CategoriasPage from "./pages/CategoriasPage";
+import ColeccionesPage from "./pages/ColeccionesPage";
+import VentasPage from "./pages/VentasPage";
+import ReportesPage from "./pages/ReportesPage";
 
 // Componente para proteger las rutas
 const PrivateRoute = ({ children }) => {
@@ -46,7 +48,7 @@ const AdminRoute = ({ children }) => {
 // Página de acceso denegado
 const AccesoDenegado = () => (
     <div style={{ padding: '40px', textAlign: 'center' }}>
-        <h2 style={{ color: '#d32f2f', marginBottom: '20px' }}>❌ Acceso Denegado</h2>
+        <h2 style={{ color: '#d32f2f', marginBottom: '20px' }}>🚫 Acceso Denegado</h2>
         <p>No tienes permisos para acceder a esta sección.</p>
     </div>
 );
@@ -54,10 +56,11 @@ const AccesoDenegado = () => (
 function App() {
     return (
         <Routes>
+
             {/* Login sin protección */}
             <Route path="/login" element={<LoginPage />} />
 
-            {/* Layout principal con menú lateral */}
+            {/* Rutas con menú y protección */}
             <Route 
                 path="/" 
                 element={
@@ -66,6 +69,7 @@ function App() {
                     </PrivateRoute>
                 }
             >
+
                 {/* Home */}
                 <Route 
                     index 
@@ -77,21 +81,11 @@ function App() {
                     } 
                 />
 
-                {/* Rutas accesibles para todos */}
+                {/* Rutas accesibles para todos los empleados */}
                 <Route path="clientes" element={<ClientesPage />} />
-                <Route 
-                    path="ventas" 
-                    element={
-                        <div style={{ padding: '20px' }}>
-                            <h2>💵 Ventas</h2>
-                            <p>Gestión de ventas ✓</p>
-                        </div>
-                    } 
-                />
+                <Route path="ventas" element={<VentasPage />} />
 
                 {/* --- Rutas EXCLUSIVAS para admin --- */}
-
-                {/* Empleados */}
                 <Route 
                     path="empleados" 
                     element={
@@ -101,7 +95,6 @@ function App() {
                     } 
                 />
 
-                {/* Productos */}
                 <Route 
                     path="productos" 
                     element={
@@ -112,38 +105,34 @@ function App() {
                 />
 
                 <Route 
-                path="categorias" 
-                element={
-                    <AdminRoute>
-                    <CategoriasPage />
-                    </AdminRoute>
-                } 
-                />
-
-                <Route 
-                path="colecciones" 
-                element={
-                    <AdminRoute>
-                    <ColeccionesPage />
-                    </AdminRoute>
-                } 
-                />
-
-                {/* Reportes */}
-                <Route 
-                    path="reportes" 
+                    path="categorias" 
                     element={
                         <AdminRoute>
-                            <div style={{ padding: '20px' }}>
-                                <h2>📊 Reporte Ventas</h2>
-                                <p>Reportes de ventas ✓</p>
-                            </div>
+                            <CategoriasPage />
                         </AdminRoute>
                     } 
                 />
 
-                {/* Acceso denegado */}
+                <Route 
+                    path="colecciones" 
+                    element={
+                        <AdminRoute>
+                            <ColeccionesPage />
+                        </AdminRoute>
+                    } 
+                />
+
+                <Route 
+                    path="reportes" 
+                    element={
+                        <AdminRoute>
+                            <ReportesPage />
+                        </AdminRoute>
+                    } 
+                />
+
                 <Route path="acceso-denegado" element={<AccesoDenegado />} />
+
             </Route>
 
             {/* Catch-all */}

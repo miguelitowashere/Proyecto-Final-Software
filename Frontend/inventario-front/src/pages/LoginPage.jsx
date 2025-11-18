@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import "./Login.css"; // Importamos el CSS normal
+import inventarioApi from "../api/inventarioApi";
+import "./Login.css";
+
+const CLIENT_ID = "857285179730-h99ak9m8ve72m1ssj2g0u690kk89a03c.apps.googleusercontent.com";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const { login } = useAuth();
 
+  // ============================
+  //   LOGIN NORMAL
+  // ============================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -18,6 +25,85 @@ const LoginPage = () => {
     }
   };
 
+  // ============================
+  //   LOGIN CON GOOGLE
+  // ============================
+  useEffect(() => {
+    const renderButton = () => {
+      if (!window.google || !document.getElementById("googleLoginDiv")) return;
+
+      window.google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleGoogleResponse,
+      });
+
+      window.google.accounts.id.renderButton(
+        document.getElementById("googleLoginDiv"),
+        {
+          theme: "outline",
+          size: "large",
+          width: 300,
+          text: "signin_with",
+          shape: "rectangular",
+        }
+      );
+    };
+
+    // Si ya cargó el SDK de Google, renderizamos de inmediato
+    if (window.google && window.google.accounts?.id) {
+      renderButton();
+      return;
+    }
+
+    // Si no, intentamos cargar el script dinámicamente
+    const scriptId = "google-identity-script";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.id = scriptId;
+      script.onload = renderButton;
+      document.body.appendChild(script);
+    } else {
+      // si existe pero aún no cargó, esperamos onload
+      const existing = document.getElementById(scriptId);
+      existing.addEventListener("load", renderButton);
+    }
+
+    return () => {
+      const existing = document.getElementById("google-identity-script");
+      if (existing) existing.removeEventListener("load", renderButton);
+    };
+  }, []);
+
+  const handleGoogleResponse = async (googleResponse) => {
+    try {
+      const credential = googleResponse.credential;
+
+      const res = await inventarioApi.post("/google-login/", {
+        credential: credential,
+      });
+
+      const { access, refresh, is_admin } = res.data;
+
+      // Guardar tokens
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+      localStorage.setItem("is_admin", is_admin ? "true" : "false");
+
+      // Redirigir
+      window.location.href = "/";
+
+    } catch (error) {
+      console.error("❌ Error Google Login:", error);
+      setError("No tienes permisos para acceder con Google.");
+    }
+  };
+
+  // ============================
+  //   UI
+  // ============================
   return (
     <div className="login-container">
 
@@ -27,8 +113,7 @@ const LoginPage = () => {
         <h2>Inicio Sesión</h2>
 
         <form onSubmit={handleSubmit}>
-          
-          {/* Usuario */}
+
           <div className="campo">
             <label>
               <span className="icono">👤</span> Usuario
@@ -41,7 +126,6 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* Contraseña */}
           <div className="campo">
             <label>
               <span className="icono">🔒</span> Contraseña
@@ -56,8 +140,14 @@ const LoginPage = () => {
 
           {error && <p className="error">{error}</p>}
 
-          <button className="btn-ingresar" type="submit">Ingresar</button>
+          <button className="btn-ingresar" type="submit">
+            Ingresar
+          </button>
         </form>
+
+        {/* BOTÓN DE GOOGLE */}
+        <div id="googleLoginDiv" style={{ marginTop: "20px" }}></div>
+
       </div>
     </div>
   );
