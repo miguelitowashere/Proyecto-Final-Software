@@ -4,6 +4,7 @@ Django settings for Backend project.
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,6 +16,15 @@ SECRET_KEY = 'django-insecure-...'  # ⚠️ Cámbialo en producción
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+# Environment overrides
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', SECRET_KEY)
+DEBUG = os.getenv('DJANGO_DEBUG', str(DEBUG)).lower() == 'true'
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv('DJANGO_ALLOWED_HOSTS', ','.join(ALLOWED_HOSTS)).split(',')
+    if host.strip()
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -148,10 +158,24 @@ SIMPLE_JWT = {
 # CORS CONFIGURATION ✅
 # ============================================
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
+    origin.strip()
+    for origin in os.getenv(
+        'DJANGO_CORS_ALLOWED_ORIGINS',
+        'http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000,http://localhost:8080,http://127.0.0.1:8080',
+    ).split(',')
+    if origin.strip()
+]
+
+if os.getenv('DJANGO_ALLOW_ALL_ORIGINS', 'False').lower() == 'true':
+    CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        'DJANGO_CSRF_TRUSTED_ORIGINS',
+        'http://localhost:5173,http://127.0.0.1:5173,http://localhost:8080,http://127.0.0.1:8080',
+    ).split(',')
+    if origin.strip()
 ]
 
 CORS_ALLOW_CREDENTIALS = True

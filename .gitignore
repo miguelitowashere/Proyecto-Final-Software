@@ -1,0 +1,20 @@
+# Envs
+Backend/.env
+Backend/.venv/
+.venv/
+*.env
+
+# Python cache
+**/__pycache__/
+*.pyc
+
+# Node modules
+Frontend/inventario-front/node_modules/
+
+# SQLite databases
+*.sqlite3
+
+# Build artifacts
+Frontend/inventario-front/dist/
+staticfiles/
+.DS_Store
