@@ -100,6 +100,7 @@ class DetalleVentaSerializer(serializers.ModelSerializer):
             'id', 'venta', 'producto', 'producto_nombre',
             'cantidad', 'precio_unitario', 'subtotal'
         ]
+        read_only_fields = ('venta', 'producto_nombre', 'subtotal')
 
 
 class VentaSerializer(serializers.ModelSerializer):
