@@ -12,7 +12,7 @@ Backend/.venv/
 Frontend/inventario-front/node_modules/
 
 # SQLite databases
-*.sqlite3
+
 
 # Build artifacts
 Frontend/inventario-front/dist/
