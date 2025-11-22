@@ -22,7 +22,23 @@ class ProductoFilter(django_filters.FilterSet):
         field_name='coleccion_id'
     )
     
+    precio_min = django_filters.NumberFilter(
+        field_name='precio_unitario',
+        lookup_expr='gte'
+    )
+    precio_max = django_filters.NumberFilter(
+        field_name='precio_unitario',
+        lookup_expr='lte'
+    )
+    stock_min = django_filters.NumberFilter(
+        field_name='stock_actual',
+        lookup_expr='gte'
+    )
+    stock_max = django_filters.NumberFilter(
+        field_name='stock_actual',
+        lookup_expr='lte'
+    )
+
     class Meta:
         model = Producto
-        # Define los campos que se pueden usar para filtrar en la URL
-        fields = ['nombre', 'categoria', 'coleccion']
+        fields = ['nombre', 'categoria', 'coleccion', 'precio_min', 'precio_max', 'stock_min', 'stock_max']

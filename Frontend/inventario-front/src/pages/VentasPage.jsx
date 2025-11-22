@@ -19,6 +19,7 @@ const VentasPage = () => {
   const [cantidad, setCantidad] = useState(1);
   const [metodoPago, setMetodoPago] = useState("presencial");
   const [notas, setNotas] = useState("");
+  const [descuento, setDescuento] = useState(0);
 
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
@@ -62,7 +63,8 @@ const VentasPage = () => {
   const totalEstimado =
     productoSeleccionado && cantidad > 0
       ? (
-          Number(precioUnitario || 0) * Number(cantidad)
+          Number(precioUnitario || 0) * Number(cantidad) -
+          Number(descuento || 0)
         ).toFixed(2)
       : "0.00";
 
@@ -86,14 +88,14 @@ const VentasPage = () => {
 
     const precioNum = Number(precioUnitario || productoSeleccionado.precio_unitario);
     const subtotal = precioNum * Number(cantidad);
-    const descuento = 0; // por ahora
-    const total = subtotal - descuento;
+    const descuentoNum = Number(descuento || 0);
+    const total = Math.max(subtotal - descuentoNum, 0);
 
     const payload = {
       canal_venta: metodoPago,
       empleado: empleado.id,
       subtotal,
-      descuento,
+      descuento: descuentoNum,
       total,
       notas,
       detalles: [
@@ -115,6 +117,7 @@ const VentasPage = () => {
       setCantidad(1);
       setMetodoPago("presencial");
       setNotas("");
+      setDescuento(0);
       setPrecioUnitario("");
       // refrescar stocks visuales
       const productosRes = await inventarioApi.get("/productos/");
@@ -161,6 +164,17 @@ const VentasPage = () => {
         </div>
 
         <div className="campo">
+          <label>Descuento</label>
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={descuento}
+            onChange={(e) => setDescuento(e.target.value)}
+          />
+        </div>
+
+        <div className="campo">
           <label>Precio unitario</label>
           <input
             type="number"
@@ -198,6 +212,15 @@ const VentasPage = () => {
         <div className="resumen">
           <p>
             <strong>Total estimado:</strong> ${totalEstimado}
+          </p>
+          <p>
+            <strong>Subtotal:</strong>{" "}
+            {productoSeleccionado
+              ? `$${(Number(precioUnitario || 0) * Number(cantidad || 0)).toFixed(2)}`
+              : "$0.00"}
+          </p>
+          <p>
+            <strong>Descuento:</strong> ${Number(descuento || 0).toFixed(2)}
           </p>
           {empleado && (
             <p>
