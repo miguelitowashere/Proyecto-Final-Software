@@ -124,8 +124,19 @@ class ProductoViewSet(viewsets.ModelViewSet):
     """Permite el CRUD de los productos y filtros para stock bajo."""
     queryset = Producto.objects.filter(activo=True).order_by('nombre')
     serializer_class = ProductoSerializer
-    permission_classes = [IsAdmin]  # Solo admin
+    permission_classes = [IsAdmin]  # Solo admin para edición/creación
     filterset_class = ProductoFilter
+
+    def get_permissions(self):
+        """
+        Permitir lectura (GET/OPTIONS) a cualquier empleado para que puedan
+        registrar ventas, pero limitar acciones de escritura a administradores.
+        """
+        if self.request.method in ['GET', 'HEAD', 'OPTIONS']:
+            permission_classes = [IsEmpleado]
+        else:
+            permission_classes = [IsAdmin]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         queryset = super().get_queryset()
