@@ -22,23 +22,18 @@ class ProductoFilter(django_filters.FilterSet):
         field_name='coleccion_id'
     )
     
-    precio_min = django_filters.NumberFilter(
-        field_name='precio_unitario',
-        lookup_expr='gte'
-    )
-    precio_max = django_filters.NumberFilter(
-        field_name='precio_unitario',
-        lookup_expr='lte'
-    )
-    stock_min = django_filters.NumberFilter(
-        field_name='stock_actual',
-        lookup_expr='gte'
-    )
-    stock_max = django_filters.NumberFilter(
-        field_name='stock_actual',
-        lookup_expr='lte'
-    )
+    precio_min = django_filters.NumberFilter(field_name='precio_unitario', lookup_expr='gte')
+    precio_max = django_filters.NumberFilter(field_name='precio_unitario', lookup_expr='lte')
+    stock_min = django_filters.NumberFilter(field_name='stock_actual', lookup_expr='gte')
+    stock_max = django_filters.NumberFilter(field_name='stock_actual', lookup_expr='lte')
+    tallas = django_filters.CharFilter(field_name='tallas', lookup_expr='icontains')
+    colores = django_filters.CharFilter(field_name='colores', lookup_expr='icontains')
 
     class Meta:
         model = Producto
-        fields = ['nombre', 'categoria', 'coleccion', 'precio_min', 'precio_max', 'stock_min', 'stock_max']
+        fields = [
+            'nombre', 'categoria', 'coleccion',
+            'precio_min', 'precio_max',
+            'stock_min', 'stock_max',
+            'tallas', 'colores'
+        ]

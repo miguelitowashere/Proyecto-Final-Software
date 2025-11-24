@@ -33,6 +33,8 @@ export default function ProductosPage() {
     precioMax: "",
     stockMin: "",
     stockMax: "",
+    tallas: "",
+    colores: "",
   });
 
   // Cargar productos
@@ -135,6 +137,9 @@ export default function ProductosPage() {
     if (stockMin !== null) params.stock_min = stockMin;
     if (stockMax !== null) params.stock_max = stockMax;
 
+    if (filtros.tallas.trim()) params.tallas = filtros.tallas.trim();
+    if (filtros.colores.trim()) params.colores = filtros.colores.trim();
+
     cargarProductos(params);
   };
 
@@ -147,6 +152,8 @@ export default function ProductosPage() {
       precioMax: "",
       stockMin: "",
       stockMax: "",
+      tallas: "",
+      colores: "",
     });
     cargarProductos();
     setError(null);
@@ -320,81 +327,24 @@ export default function ProductosPage() {
             onChange={handleFiltroChange}
           />
         </div>
-        <div className="filtro-item botones">
-          <button className="btn-filtrar" onClick={aplicarFiltros}>Aplicar</button>
-          <button className="btn-limpiar" onClick={limpiarFiltros}>Limpiar</button>
-        </div>
-      </div>
-
-      <div className="filtros-productos">
         <div className="filtro-item">
-          <label>Nombre</label>
+          <label>Tallas</label>
           <input
             type="text"
-            name="nombre"
-            value={filtros.nombre}
+            name="tallas"
+            value={filtros.tallas}
             onChange={handleFiltroChange}
-            placeholder="Buscar por nombre"
+            placeholder="Ej: S,M"
           />
         </div>
         <div className="filtro-item">
-          <label>Categoría</label>
-          <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
-            <option value="">Todas</option>
-            {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.nombre}</option>
-            ))}
-          </select>
-        </div>
-        <div className="filtro-item">
-          <label>Colección</label>
-          <select name="coleccion" value={filtros.coleccion} onChange={handleFiltroChange}>
-            <option value="">Todas</option>
-            {colecciones.map((col) => (
-              <option key={col.id} value={col.id}>{col.nombre}</option>
-            ))}
-          </select>
-        </div>
-        <div className="filtro-item">
-          <label>Precio mín.</label>
+          <label>Colores</label>
           <input
-            type="number"
-            name="precioMin"
-            min="0"
-            step="0.01"
-            value={filtros.precioMin}
+            type="text"
+            name="colores"
+            value={filtros.colores}
             onChange={handleFiltroChange}
-          />
-        </div>
-        <div className="filtro-item">
-          <label>Precio máx.</label>
-          <input
-            type="number"
-            name="precioMax"
-            min="0"
-            step="0.01"
-            value={filtros.precioMax}
-            onChange={handleFiltroChange}
-          />
-        </div>
-        <div className="filtro-item">
-          <label>Stock mín.</label>
-          <input
-            type="number"
-            name="stockMin"
-            min="0"
-            value={filtros.stockMin}
-            onChange={handleFiltroChange}
-          />
-        </div>
-        <div className="filtro-item">
-          <label>Stock máx.</label>
-          <input
-            type="number"
-            name="stockMax"
-            min="0"
-            value={filtros.stockMax}
-            onChange={handleFiltroChange}
+            placeholder="Ej: rojo"
           />
         </div>
         <div className="filtro-item botones">
