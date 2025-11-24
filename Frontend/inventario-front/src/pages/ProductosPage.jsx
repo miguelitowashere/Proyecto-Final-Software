@@ -87,15 +87,54 @@ export default function ProductosPage() {
     setFiltros((prev) => ({ ...prev, [name]: value }));
   };
 
+  const normalizarNumero = (valor) => {
+    if (valor === "" || valor === null || typeof valor === "undefined") return null;
+    const numero = Number(valor);
+    return Number.isNaN(numero) ? null : numero;
+  };
+
   const aplicarFiltros = () => {
+    setError(null);
     const params = {};
-    if (filtros.nombre) params.nombre = filtros.nombre;
+
+    if (filtros.nombre.trim()) params.nombre = filtros.nombre.trim();
     if (filtros.categoria) params.categoria = filtros.categoria;
     if (filtros.coleccion) params.coleccion = filtros.coleccion;
-    if (filtros.precioMin) params.precio_min = filtros.precioMin;
-    if (filtros.precioMax) params.precio_max = filtros.precioMax;
-    if (filtros.stockMin) params.stock_min = filtros.stockMin;
-    if (filtros.stockMax) params.stock_max = filtros.stockMax;
+
+    const precioMin = normalizarNumero(filtros.precioMin);
+    if (filtros.precioMin && precioMin === null) {
+      setError("Precio mínimo inválido");
+      return;
+    }
+    const precioMax = normalizarNumero(filtros.precioMax);
+    if (filtros.precioMax && precioMax === null) {
+      setError("Precio máximo inválido");
+      return;
+    }
+    if (precioMin !== null && precioMax !== null && precioMin > precioMax) {
+      setError("El precio mínimo no puede ser mayor al máximo");
+      return;
+    }
+    if (precioMin !== null) params.precio_min = precioMin;
+    if (precioMax !== null) params.precio_max = precioMax;
+
+    const stockMin = normalizarNumero(filtros.stockMin);
+    if (filtros.stockMin && stockMin === null) {
+      setError("Stock mínimo inválido");
+      return;
+    }
+    const stockMax = normalizarNumero(filtros.stockMax);
+    if (filtros.stockMax && stockMax === null) {
+      setError("Stock máximo inválido");
+      return;
+    }
+    if (stockMin !== null && stockMax !== null && stockMin > stockMax) {
+      setError("El stock mínimo no puede ser mayor al máximo");
+      return;
+    }
+    if (stockMin !== null) params.stock_min = stockMin;
+    if (stockMax !== null) params.stock_max = stockMax;
+
     cargarProductos(params);
   };
 
@@ -110,6 +149,7 @@ export default function ProductosPage() {
       stockMax: "",
     });
     cargarProductos();
+    setError(null);
   };
 
   const handleAgregar = () => {
@@ -207,6 +247,83 @@ export default function ProductosPage() {
         <button className="btn-agregar" onClick={handleAgregar}>
           ➕ Agregar Producto
         </button>
+      </div>
+
+      <div className="filtros-productos">
+        <div className="filtro-item">
+          <label>Nombre</label>
+          <input
+            type="text"
+            name="nombre"
+            value={filtros.nombre}
+            onChange={handleFiltroChange}
+            placeholder="Buscar por nombre"
+          />
+        </div>
+        <div className="filtro-item">
+          <label>Categoría</label>
+          <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
+            <option value="">Todas</option>
+            {categorias.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+            ))}
+          </select>
+        </div>
+        <div className="filtro-item">
+          <label>Colección</label>
+          <select name="coleccion" value={filtros.coleccion} onChange={handleFiltroChange}>
+            <option value="">Todas</option>
+            {colecciones.map((col) => (
+              <option key={col.id} value={col.id}>{col.nombre}</option>
+            ))}
+          </select>
+        </div>
+        <div className="filtro-item">
+          <label>Precio mín.</label>
+          <input
+            type="number"
+            name="precioMin"
+            min="0"
+            step="0.01"
+            value={filtros.precioMin}
+            onChange={handleFiltroChange}
+          />
+        </div>
+        <div className="filtro-item">
+          <label>Precio máx.</label>
+          <input
+            type="number"
+            name="precioMax"
+            min="0"
+            step="0.01"
+            value={filtros.precioMax}
+            onChange={handleFiltroChange}
+          />
+        </div>
+        <div className="filtro-item">
+          <label>Stock mín.</label>
+          <input
+            type="number"
+            name="stockMin"
+            min="0"
+            value={filtros.stockMin}
+            onChange={handleFiltroChange}
+          />
+        </div>
+        <div className="filtro-item">
+          <label>Stock máx.</label>
+          <input
+            type="number"
+            name="stockMax"
+            min="0"
+            value={filtros.stockMax}
+            onChange={handleFiltroChange}
+          />
+        </div>
+        <div className="filtro-item botones">
+          <button className="btn-filtrar" onClick={aplicarFiltros}>Aplicar</button>
+          <button className="btn-limpiar" onClick={limpiarFiltros}>Limpiar</button>
+        </div>
       </div>
 
       <div className="filtros-productos">

@@ -138,6 +138,18 @@ class ProductoViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAdmin]
         return [permission() for permission in permission_classes]
 
+    def destroy(self, request, *args, **kwargs):
+        """
+        En lugar de eliminar físicamente el producto (lo cual puede fallar
+        si existen movimientos/ventas relacionados), marcarlo como inactivo.
+        """
+        instance = self.get_object()
+        instance.activo = False
+        if instance.stock_actual is None:
+            instance.stock_actual = 0
+        instance.save(update_fields=['activo', 'stock_actual'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def get_queryset(self):
         queryset = super().get_queryset()
         
